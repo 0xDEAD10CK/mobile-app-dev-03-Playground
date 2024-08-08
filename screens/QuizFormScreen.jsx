@@ -4,14 +4,38 @@ import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const QuizFormScreen = (props) => {
-  const [selectedLanguage, setSelectedLanguage] = useState();
+
+  const [category, setCategory] = useState("");
+  const [difficulty, setDifficulty] = useState("");
+  const [type, setType] = useState("");
+
+  // Three functions to set Category, Difficulty and Type
+  const onChangeCategory = (inputText) => setCategory(inputText);
+  const onChangeDifficulty = (inputText) => setDifficulty(inputText);
+  const onChangeType = (inputText) => setType(inputText);
+  
+
+  const storeQuizData = async () => {
+    try {
+      const data = { category, difficulty, type };
+
+      // Store the data in AsyncStorage
+      await AsyncStorage.setItem("quiz_data", JSON.stringify(data));
+
+      // Reset the state of firstName and lastName
+      setFirstName("");
+      setLastName("");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <View style={{ display:'flex', justifyContent:"center", marginTop:20}}>
       <Text>Quiz Form Screen</Text>
       <Picker
-        selectedValue={selectedLanguage}
-        onValueChange={(itemValue, itemIndex) => setSelectedLanguage(itemValue)}
+        selectedValue={category}
+        onValueChange={(itemValue, itemIndex) => onChangeCategory(itemValue)}
       >
         <Picker.Item label="Select Category" value=""/>
         <Picker.Item label="General Knowledge" value="9" />
@@ -21,8 +45,8 @@ const QuizFormScreen = (props) => {
       </Picker>
 
       <Picker
-        selectedValue={selectedLanguage}
-        onValueChange={(itemValue, itemIndex) => setSelectedLanguage(itemValue)}
+        selectedValue={difficulty}
+        onValueChange={(itemValue, itemIndex) => onChangeDifficulty(itemValue)}
       >
         <Picker.Item label="Select Difficulty" value="" />
         <Picker.Item label="Easy" value="easy" />
@@ -31,15 +55,21 @@ const QuizFormScreen = (props) => {
       </Picker>
 
       <Picker
-        selectedValue={selectedLanguage}
-        onValueChange={(itemValue, itemIndex) => setSelectedLanguage(itemValue)}
+        selectedValue={type}
+        onValueChange={(itemValue, itemIndex) => onChangeType(itemValue)}
       >
         <Picker.Item label="Select Type" value="" />
         <Picker.Item label="Multiple Choice" value="multiple" />
         <Picker.Item label="True / False" value="boolean" />
       </Picker>
 
-      <Button title="Create Quiz" onPress={() => props.navigation.goBack()} />
+      <Button
+        title="Go to Quiz"
+        onPress={() => {
+          storeQuizData();
+          props.navigation.navigate("Details");
+        }}
+      />
     </View>
   );
 };
