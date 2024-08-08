@@ -22,9 +22,6 @@ const QuizFormScreen = (props) => {
       // Store the data in AsyncStorage
       await AsyncStorage.setItem("quiz_data", JSON.stringify(data));
 
-      // Reset the state of firstName and lastName
-      setFirstName("");
-      setLastName("");
     } catch (err) {
       console.log(err);
     }
@@ -67,7 +64,7 @@ const QuizFormScreen = (props) => {
         title="Go to Quiz"
         onPress={() => {
           storeQuizData();
-          props.navigation.navigate("Details");
+          props.navigation.navigate("QuizDetails");
         }}
       />
     </View>
